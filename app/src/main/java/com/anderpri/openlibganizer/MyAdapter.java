@@ -1,6 +1,7 @@
 package com.anderpri.openlibganizer;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +12,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
     private List<String> titles;
-    private List<Integer> images;
+    private List<String> images;
 
-    public MyAdapter(Context context, List<String> titles, List<Integer> images){
+    public MyAdapter(Context context, List<String> titles, List<String> images){
         this.context=context;
         this.images=images;
         this.titles=titles;
@@ -35,7 +38,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.mTextView.setText(titles.get(position));
-        holder.mImageView.setImageResource(images.get(position));
+        if (images.get(position).equals("N/A")){
+            // Fuente: https://devexperto.com/glide-android/
+            Uri uri = Uri.parse(images.get(position));
+            Glide.with(context).load(uri).into(holder.mImageView);
+        } else {
+            holder.mImageView.setImageResource(R.drawable.cover_not_available);
+        }
+
     }
 
     @Override
@@ -57,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(),"Clicked on: "+ getAdapterPosition(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(view.getContext(),"Clicked on: "+ getAdapterPosition(),Toast.LENGTH_SHORT).show();
                 }
             });
         }
