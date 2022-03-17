@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">OpenLibganizer</string>
+    <string name="app_name">0OpenLibganizer</string>
     <string name="submit">Submit</string>
+    <string name="isbn_not_found">ISBN not found!</string>
+    <string name="book_added">%1$s added!</string>
+    <string name="error_isbn">An error happened while obtaining the data</string>
+    <string name="isbn_dialog">Enter ISBN code</string>
 </resources>
