@@ -38,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.mTextView.setText(titles.get(position));
-        if (images.get(position).equals("N/A")){
+        if (!images.get(position).equals("N/A")){
             // Fuente: https://devexperto.com/glide-android/
             Uri uri = Uri.parse(images.get(position));
             Glide.with(context).load(uri).into(holder.mImageView);
@@ -64,11 +64,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             mImageView = itemView.findViewById(R.id.imageview);
             mTextView = itemView.findViewById(R.id.textview);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //Toast.makeText(view.getContext(),"Clicked on: "+ getAdapterPosition(),Toast.LENGTH_SHORT).show();
-                }
+            itemView.setOnClickListener(view -> {
+                //Toast.makeText(view.getContext(),"Clicked on: "+ getAdapterPosition(),Toast.LENGTH_SHORT).show();
             });
         }
     }
