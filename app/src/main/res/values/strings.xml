@@ -1,8 +1,24 @@
 <resources>
+    <!-- Global strings -->
     <string name="app_name">0OpenLibganizer</string>
+    <string name="wait">Please wait…</string>
+
+    <!-- Login activity strings -->
+    <string name="login_user_text">Username</string>
+    <string name="login_pass_text">Password</string>
+    <string name="login_btn_text">Log in</string>
+    <string name="login_incorrect_creds">Incorrect credentials!</string>
+
+    <!-- Main activity strings -->
+        <!-- ISBN search -->
     <string name="submit">Submit</string>
     <string name="isbn_not_found">ISBN not found!</string>
     <string name="book_added">%1$s added!</string>
     <string name="error_isbn">An error happened while obtaining the data</string>
     <string name="isbn_dialog">Enter ISBN code</string>
+    <string name="isbn_already">ISBN already registered!</string>
+
+    <!-- Book activity strings -->
+        <!-- title, author... -->
+
 </resources>

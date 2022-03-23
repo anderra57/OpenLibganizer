@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">0OpenLibganizer</string>
+    <string name="submit">Enviar</string>
+    <string name="isbn_not_found">¡No se encontró el código ISBN!</string>
+    <string name="book_added">¡%1$s añadido!</string>
+    <string name="error_isbn">Ocurrió un error al obtener la información</string>
+    <string name="isbn_dialog">Introduce el código ISBN</string>
+    <string name="login_user_text">Usuario</string>
+    <string name="login_pass_text">Contraseña</string>
+    <string name="login_btn_text">Iniciar sesión</string>
+    <string name="login_incorrect_creds">¡Credenciales incorrectas!</string>
+    <string name="wait">Por favor, espere…</string>
+    <string name="isbn_already">¡ISBN ya registrado!</string>
+</resources>
