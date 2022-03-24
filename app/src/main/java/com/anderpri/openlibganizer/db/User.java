@@ -10,13 +10,23 @@ public class User {
 
     @PrimaryKey
     @NonNull
-    public String user;
+    @ColumnInfo
+    public String username;
 
-    @ColumnInfo(name = "pass")
-    public String pass;
+    @ColumnInfo
+    public String password;
 
-    public User(@NonNull String user, String pass){
-        this.user=user;
-        this.pass=pass;
+    @ColumnInfo
+    public String lang;
+
+    @ColumnInfo
+    public boolean theme;
+
+    public User(@NonNull String username, String password, String lang, boolean theme) {
+        this.username = username;
+        this.password = password;
+        this.lang = lang;
+        this.theme = theme;
     }
+
 }
