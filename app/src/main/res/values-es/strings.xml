@@ -12,4 +12,9 @@
     <string name="login_incorrect_creds">¡Credenciales incorrectas!</string>
     <string name="wait">Por favor, espere…</string>
     <string name="isbn_already">¡ISBN ya registrado!</string>
+    <string name="add_dialog_title">Añadir libro</string>
+    <string name="add_dialog_cancel">Cancelar</string>
+    <string name="test_string_locale">Previa consulta con otras partes interesadas, en colaboración con las autoridades competentes nacionales y teniendo en cuenta la experiencia resultante de los dictámenes emitidos por la Autoridad Europea de Seguridad Alimentaria y los avances científicos o tecnológicos, los representantes correspondientes de las empresas europeas de piensos han elaborado modificaciones del Catálogo de materias primas para piensos conforme al Reglamento (UE) n.o 68/2013 de la Comisión (2). Estas modificaciones son aclaraciones de las disposiciones generales, nuevas entradas relativas a los procesos de tratamientos y a materias primas para piensos y algunas mejoras de las entradas actuales. Por otra parte, con las modificaciones se fijan los contenidos máximos de impurezas químicas, los niveles de pureza botánica y los niveles del contenido de humedad, y se establecen declaraciones obligatorias respecto a las materias primas para piensos.</string>
+    <string name="radio_en">Inglés</string>
+    <string name="radio_es">Español</string>
 </resources>
