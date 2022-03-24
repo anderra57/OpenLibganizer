@@ -9,7 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import java.util.Objects;
 
 // CUSTOM DIALOG
 // https://gist.github.com/codinginflow/11e5acb69a91db8f2be0f8e495505d12
@@ -18,28 +21,21 @@ public class DialogNewBook extends AppCompatDialogFragment {
     private EditText editTextUsername;
     private DialogNewBookListener listener;
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog, null);
 
         builder.setView(view)
-                .setTitle("Añadir libro")
+                .setTitle(R.string.add_dialog_title)
                 //.setMessage("Mensaje")
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String username = editTextUsername.getText().toString();
-                        listener.addBook(username);
-                    }
+                .setNegativeButton(R.string.add_dialog_cancel, (dialogInterface, i) -> {})
+                .setPositiveButton(R.string.add_dialog_ok, (dialogInterface, i) -> {
+                    String username = editTextUsername.getText().toString();
+                    listener.addBook(username);
                 });
 
         editTextUsername = view.findViewById(R.id.mISBN);
@@ -48,12 +44,12 @@ public class DialogNewBook extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             listener = (DialogNewBookListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() +
+            throw new ClassCastException(context +
                     "must implement ExampleDialogListener");
         }
     }
