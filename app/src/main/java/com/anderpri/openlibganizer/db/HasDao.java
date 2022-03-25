@@ -16,12 +16,15 @@ public interface HasDao {
     @Insert
     void insertRelation(Has relation);
 
+    @Query("select count(*) from Has where isbn like :mISBN and username like :mUser")
+    int checkIfBookRelated(String mISBN, String mUser);
+
     @Delete
     void delete(Has relation);
 
     // para revisar si, tras borrar una relación, ese libro
     // sigue estando relacionado con algún usuario
     @Query("select count(*) from Has where isbn like :mISBN")
-    int checkIfBookRelated(String mISBN);
+    int checkIfLastBookRelated(String mISBN);
 
 }
