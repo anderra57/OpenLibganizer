@@ -1,22 +1,17 @@
-package com.anderpri.openlibganizer;
+package com.anderpri.openlibganizer.views;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anderpri.openlibganizer.R;
 import com.anderpri.openlibganizer.db.AppDatabase;
 import com.anderpri.openlibganizer.db.User;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Locale;
+import com.anderpri.openlibganizer.utils.Utils;
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -1,6 +1,5 @@
-package com.anderpri.openlibganizer;
+package com.anderpri.openlibganizer.model;
 
-import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 

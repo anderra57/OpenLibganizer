@@ -1,4 +1,4 @@
-package com.anderpri.openlibganizer;
+package com.anderpri.openlibganizer.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;

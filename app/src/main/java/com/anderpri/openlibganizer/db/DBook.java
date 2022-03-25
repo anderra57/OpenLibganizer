@@ -5,11 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.anderpri.openlibganizer.Book;
-import com.anderpri.openlibganizer.Books;
-
-import java.util.List;
-
 @Entity(tableName = "DBook")
 public class DBook {
 

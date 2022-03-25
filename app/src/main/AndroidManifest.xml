@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OpenLibganizer">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".views.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".views.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,10 +24,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CardActivity"
+            android:name=".views.CardActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".views.MainActivity"
             android:exported="true" />
     </application>
 

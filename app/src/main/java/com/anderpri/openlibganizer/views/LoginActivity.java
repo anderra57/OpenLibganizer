@@ -1,26 +1,18 @@
-package com.anderpri.openlibganizer;
+package com.anderpri.openlibganizer.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.anderpri.openlibganizer.R;
 import com.anderpri.openlibganizer.db.AppDatabase;
 import com.anderpri.openlibganizer.db.User;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Locale;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import com.anderpri.openlibganizer.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 

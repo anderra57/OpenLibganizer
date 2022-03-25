@@ -1,11 +1,10 @@
-package com.anderpri.openlibganizer;
+package com.anderpri.openlibganizer.views;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,9 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anderpri.openlibganizer.R;
+import com.anderpri.openlibganizer.controllers.MyAdapter;
 import com.anderpri.openlibganizer.db.AppDatabase;
 import com.anderpri.openlibganizer.db.DBook;
 import com.anderpri.openlibganizer.db.Has;
+import com.anderpri.openlibganizer.model.Book;
+import com.anderpri.openlibganizer.model.Books;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
     private String mUser = "ERROR";
     AppDatabase db;//  = AppDatabase.getInstance(this.getApplicationContext());
     private boolean clicked = false;
+    boolean first = false;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -68,45 +72,40 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = AppDatabase.getInstance(this.getApplicationContext());
 
+        // Para gestionar el username
         if(getIntent().getExtras().getString("username") != null) {
             mUser = getIntent().getExtras().getString("username");
+            getBooksFromDB();
         }
-
-
 
         // Para gestionar la rotación
         // Fuente: https://stackoverflow.com/a/28155179
-
         if(savedInstanceState != null && savedInstanceState.getParcelable("books") != null) {
             mBooks = savedInstanceState.getParcelable("books");
         } else if (savedInstanceState == null){
-            db = AppDatabase.getInstance(this.getApplicationContext());
-            importTestData();
+            Toast.makeText(getApplicationContext(), "welcome "+ mUser, Toast.LENGTH_LONG).show();
+            // TODO cambiar hardcoded text welcome
+            // Si es el primer acceso importamos la información de prueba, útil para hacer los testeos
+            //importTestData();
         }
-
-        Toast.makeText(getApplicationContext(), "welcome "+ mUser, Toast.LENGTH_LONG).show();
-
-
-
-
 
         // ------------------------------------- //
         // RecyclerView + CardView configuration
 
-        // Las variables están inicializadas arriba
+        // Inicializamos las variables
         adapter = new MyAdapter(this, mBooks, this);
         RecyclerView mRecyclerView = findViewById(R.id.recyclerview);
-
-        // Importamos la información de prueba, útil para hacer los testeos
-        //importTestData();
 
         // Configuramos el tamaño de la grilla tanto en vertical como en horizontal
         int spanC;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { spanC = 4; } else { spanC = 2; }
 
-        // Y finalmente
+        // Y creamos la grilla
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanC, GridLayoutManager.VERTICAL, false);
+
+        // Finalmente terminamos de configurar el RecyclerView
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
@@ -129,50 +128,61 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         startActivity(i);
     }
 
-    private void getBooksFromDB(){
+    private void getBooksFromDB(){ // para cargar los libros
+
+        gab();
+        importTestData();
+
+        System.out.println(mUser);
+        List<DBook> dBookList = db.dBookDao().getAllBooksFromUsername(mUser);
+        System.out.println(dBookList.toString());
+        System.out.println(dBookList.size());
+        List<Book> bookList = convertDBookToBook(dBookList);
+
+        if (bookList.size()!=0){
+            mBooks.addAll(bookList);
+            System.out.println(mBooks.toString());
+        }
 
     }
 
+    private void gab() {
+        System.out.println("has");
+        List<Has> lh = db.hasDao().getAllUsersBooks();
+        lh.stream().map(h -> h.isbn + " " + h.username).forEach(System.out::println);
+
+        System.out.println("books");
+        List<DBook> lb = db.dBookDao().getAllBooks();
+        lb.stream().map(b -> b.isbn).forEach(System.out::println);
+    }
+
     private void importTestData() {
-/*
-        Book b1 = new Book("9780618680009","The God Delusion","https://covers.openlibrary.org/b/id/8231555-L.jpg");
-        Book b2 = new Book("9780142000656","East of Eden","https://covers.openlibrary.org/b/id/8309140-L.jpg");
-        Book b3 = new Book("9780152052607","The Hundred Dresses","https://covers.openlibrary.org/b/id/10703295-L.jpg");
-        Book b4 = new Book("9780205609994","Influence","https://covers.openlibrary.org/b/id/8284301-L.jpg");
-        Book b5 = new Book("9780803740167","Roller Girl","https://covers.openlibrary.org/b/id/11327078-L.jpg");
-        mBooks.add(b1);
-        mBooks.add(b2);
-        mBooks.add(b3);
-        mBooks.add(b4);
-        mBooks.add(b5);
 
-        System.out.println(mBooks.toString());
-*/
-        DBook b1 = new DBook("9780618680009","The God Delusion","https://covers.openlibrary.org/b/id/8231555-L.jpg","","","");
-        DBook b2 = new DBook("9780142000656","East of Eden","https://covers.openlibrary.org/b/id/8309140-L.jpg","","","");
-        DBook b3 = new DBook("9780152052607","The Hundred Dresses","https://covers.openlibrary.org/b/id/10703295-L.jpg","","","");
-        DBook b4 = new DBook("9780205609994","Influence","https://covers.openlibrary.org/b/id/8284301-L.jpg","","","");
-        DBook b5 = new DBook("9780803740167","Roller Girl","https://covers.openlibrary.org/b/id/11327078-L.jpg","","","");
+        if((db.dBookDao().checkIfBookAdded("9780618680009") == 0)){
+            DBook b1 = new DBook("9780618680009","The God Delusion","https://covers.openlibrary.org/b/id/8231555-L.jpg","","","");
+            DBook b2 = new DBook("9780142000656","East of Eden","https://covers.openlibrary.org/b/id/8309140-L.jpg","","","");
+            DBook b3 = new DBook("9780152052607","The Hundred Dresses","https://covers.openlibrary.org/b/id/10703295-L.jpg","","","");
+            DBook b4 = new DBook("9780205609994","Influence","https://covers.openlibrary.org/b/id/8284301-L.jpg","","","");
+            DBook b5 = new DBook("9780803740167","Roller Girl","https://covers.openlibrary.org/b/id/11327078-L.jpg","","","");
 
-        db.dBookDao().insertBook(b1);
-        db.dBookDao().insertBook(b2);
-        db.dBookDao().insertBook(b3);
-        db.dBookDao().insertBook(b4);
-        db.dBookDao().insertBook(b5);
+            db.dBookDao().insertBook(b1);
+            db.dBookDao().insertBook(b2);
+            db.dBookDao().insertBook(b3);
+            db.dBookDao().insertBook(b4);
+            db.dBookDao().insertBook(b5);
 
-        db.hasDao().insertRelation(new Has("a","9780618680009"));
-        db.hasDao().insertRelation(new Has("a","9780142000656"));
-        db.hasDao().insertRelation(new Has("a","9780152052607"));
-        db.hasDao().insertRelation(new Has("a","9780205609994"));
-        db.hasDao().insertRelation(new Has("a","9780803740167"));
+            db.hasDao().insertRelation(new Has("a","9780618680009"));
+            db.hasDao().insertRelation(new Has("a","9780142000656"));
+            db.hasDao().insertRelation(new Has("a","9780152052607"));
+            db.hasDao().insertRelation(new Has("b","9780205609994"));
+            db.hasDao().insertRelation(new Has("b","9780803740167"));
 
-        List<DBook> lst = db.dBookDao().getAllBooksFromUsername("a");
+            //List<DBook> dBookList = db.dBookDao().getAllBooksFromUsername("a");
+            //List<Book> bookList = convertDBookToBook(dBookList);
 
-        List<Book> bookList = convertDBookToBook(lst);
-
-        mBooks.addAll(bookList);
-        System.out.println(mBooks.toString());
-
+            //mBooks.addAll(bookList);
+            //System.out.println(mBooks.toString());
+        }
 
     }
 
@@ -198,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
 
     @Override
     public void addBook(String mISBN) {
-        //String uri = "https://openlibrary.org/api/books?bibkeys=ISBN:" + mISBN + "&jscmd=details&format=json";
         String uri = "https://openlibrary.org/search.json?isbn=" + mISBN;
         new JsonTask().execute(uri);
     }
@@ -251,21 +260,38 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
 
         System.out.println(mBook);
 
-        if (mISBN.equals("5")){ // mirar si ya existe
-            Toast.makeText(getApplicationContext(), R.string.isbn_already, Toast.LENGTH_LONG).show();
+        // Antes de nada, se mira si el ISBN no existe en la API
+        if (JSON_STRING.length() < 10) { Toast.makeText(getApplicationContext(), R.string.isbn_not_found, Toast.LENGTH_LONG).show(); }
+        else {
+            // Si el ISBN existe hay dos comprobaciones:
+            // 1) Si el libro está o no está en la base de datos
+            // Tras esta comprobación, el libro está sí o sí en el sistema
+            // 2) Si el libro está relacionado con nuestro usuario o no
+
+            // 1) Se mira si el libro está REGISTRADO en la base de datos
+            // Si no está registrado, se añade a la base de datos
+            if (db.dBookDao().checkIfBookAdded(mISBN) == 0) {
+                DBook newBook = new DBook(mISBN, mTitle, mThumbnail, mAuthor, mPublisher, mYear);
+                db.dBookDao().insertBook(newBook);
+            }
+
+            // 2) Se mira si el libro está RELACIONADO a nuestro usuario en la base de datos
+            if (db.hasDao().checkIfBookRelated(mISBN,mUser) != 0){
+                Toast.makeText(getApplicationContext(), R.string.isbn_already, Toast.LENGTH_LONG).show();
+            } else {
+                // Primero se relaciona el libro
+                db.hasDao().insertRelation(new Has(mUser,mISBN));
+
+                // Y por último se añade a la vista
+                int index_insert = mBooks.size();
+                mBooks.add(index_insert, mBook);
+                //adapter.notifyItemInserted(index_insert);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), getString(R.string.book_added, mTitle), Toast.LENGTH_LONG).show();
+            }
+
         }
 
-        if (JSON_STRING.length() < 10) {
-            //Toast.makeText(getApplicationContext(), R.string.isbn_not_found, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), R.string.isbn_not_found, Toast.LENGTH_LONG).show();
-        } else {
-            int index_insert = mBooks.size();
-            mBooks.add(index_insert, mBook);
-            //mBooks.toString();
-            //adapter.notifyItemInserted(index_insert);
-            adapter.notifyDataSetChanged();
-            Toast.makeText(getApplicationContext(), getString(R.string.book_added, mTitle), Toast.LENGTH_LONG).show();
-        }
 
 
     }
