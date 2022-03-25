@@ -34,11 +34,11 @@ public class SettingsActivity extends AppCompatActivity {
         TextView test_string = findViewById(R.id.test_string);
 
         if (idRadio == R.id.radio_en && checked) {
-            Utils.setLocale(this, "en");
+            Utils.getInstance().setLocale(this, "en");
             //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Toast.makeText(view.getContext(), "ENGLISH", Toast.LENGTH_SHORT).show();
         } else if (idRadio == R.id.radio_es && checked) {
-            Utils.setLocale(this, "es");
+            Utils.getInstance().setLocale(this, "es");
             //https://developer.android.com/guide/topics/ui/look-and-feel/darktheme
             //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             Toast.makeText(view.getContext(), "SPANISH", Toast.LENGTH_SHORT).show();

@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         db = AppDatabase.getInstance(this.getApplicationContext());
 
         // Para gestionar el username
+        // Fuente: https://stackoverflow.com/a/2736612
         if(getIntent().getExtras().getString("username") != null) {
             mUser = getIntent().getExtras().getString("username");
             getBooksFromDB();

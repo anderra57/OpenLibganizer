@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setLocale(this,"en");
+        Utils.getInstance().setLocale(this,"en");
         
         addUser();
 
@@ -41,7 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         AppDatabase db  = AppDatabase.getInstance(this.getApplicationContext());
 
         String input_user = "a";
-        String input_pass = "a";
+        String input_pass = Utils.getInstance().get_SHA_512_SecurePassword("a");
+        System.out.println(input_pass);
 
         String lang = "es"; // default language, cambiar
         boolean theme = false; // default
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkLogin(View view) {
         String sUser = mUserText.getText().toString();
-        String sPass = mPassText.getText().toString();
+        String sPass = Utils.getInstance().get_SHA_512_SecurePassword(mPassText.getText().toString());
 
         System.out.println(sUser + " " + sPass);
         boolean basicLogin = sUser.equals("") && sPass.equals("");
