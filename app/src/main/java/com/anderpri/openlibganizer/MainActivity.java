@@ -5,18 +5,24 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anderpri.openlibganizer.db.AppDatabase;
+import com.anderpri.openlibganizer.db.DBook;
+import com.anderpri.openlibganizer.db.Has;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,18 +40,28 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements DialogNewBook.DialogNewBookListener, MyAdapter.OnBookListener { //implements DialogNewBook2.ListenerNewBook {
 
-    private RecyclerView mRecyclerView;
-    //private List<String> mTitles = new ArrayList<>();
-    //private List<String> mImages = new ArrayList<>();
-    private List<Book> mBooks = new ArrayList<>();
-    //private MyAdapter adapter = new MyAdapter(this, mTitles, mImages);
-    private MyAdapter adapter = new MyAdapter(this, mBooks, this);
+    private Books mBooks = new Books();
+    private MyAdapter adapter;
     private FloatingActionButton fab_main;
     private FloatingActionButton fab_settings;
     private FloatingActionButton fab_add;
     private ProgressDialog pd;
-
+    private String mUser = "ERROR";
+    AppDatabase db;//  = AppDatabase.getInstance(this.getApplicationContext());
     private boolean clicked = false;
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("books", mBooks);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mBooks = savedInstanceState.getParcelable("books");
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +69,37 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         setContentView(R.layout.activity_main);
 
 
+        if(getIntent().getExtras().getString("username") != null) {
+            mUser = getIntent().getExtras().getString("username");
+        }
+
+
+
+        // Para gestionar la rotación
+        // Fuente: https://stackoverflow.com/a/28155179
+
+        if(savedInstanceState != null && savedInstanceState.getParcelable("books") != null) {
+            mBooks = savedInstanceState.getParcelable("books");
+        } else if (savedInstanceState == null){
+            db = AppDatabase.getInstance(this.getApplicationContext());
+            importTestData();
+        }
+
+        Toast.makeText(getApplicationContext(), "welcome "+ mUser, Toast.LENGTH_LONG).show();
+
+
+
+
 
         // ------------------------------------- //
         // RecyclerView + CardView configuration
 
         // Las variables están inicializadas arriba
-        mRecyclerView = findViewById(R.id.recyclerview);
+        adapter = new MyAdapter(this, mBooks, this);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerview);
 
         // Importamos la información de prueba, útil para hacer los testeos
-        importTestData();
+        //importTestData();
 
         // Configuramos el tamaño de la grilla tanto en vertical como en horizontal
         int spanC;
@@ -80,42 +118,23 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         fab_settings = findViewById(R.id.fab_settings);
         fab_add = findViewById(R.id.fab_add);
 
-        fab_main.setOnClickListener(view -> {
-            onFABClicked();
-            // Toast.makeText(getApplicationContext(), "Main", Toast.LENGTH_SHORT).show();
-        });
-        fab_settings.setOnClickListener(view -> {
-            //Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
-        });
+        fab_main.setOnClickListener(view -> onFABClicked());
+        fab_settings.setOnClickListener(view -> openSettings());
         fab_add.setOnClickListener(view -> openDialogNewBook());
 
     }
 
+    private void openSettings() {
+        Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    private void getBooksFromDB(){
+
+    }
+
     private void importTestData() {
-
-        /*
-        String[] isbns = {"9780618680009","9780142000656",
-                "9780152052607","9780205609994","9780803740167"};
-
-        for (String s:isbns) {
-            addBook(s);
-        }*/
-        /*
-        mTitles.add("");
-        mImages.add("");
-
-        mTitles.add("");
-        mImages.add("");
-
-        mTitles.add("");
-        mImages.add("");
-
-        mTitles.add("");
-        mImages.add("");
-
-        mTitles.add("");
-        mImages.add("");*/
-
+/*
         Book b1 = new Book("9780618680009","The God Delusion","https://covers.openlibrary.org/b/id/8231555-L.jpg");
         Book b2 = new Book("9780142000656","East of Eden","https://covers.openlibrary.org/b/id/8309140-L.jpg");
         Book b3 = new Book("9780152052607","The Hundred Dresses","https://covers.openlibrary.org/b/id/10703295-L.jpg");
@@ -127,6 +146,49 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         mBooks.add(b4);
         mBooks.add(b5);
 
+        System.out.println(mBooks.toString());
+*/
+        DBook b1 = new DBook("9780618680009","The God Delusion","https://covers.openlibrary.org/b/id/8231555-L.jpg","","","");
+        DBook b2 = new DBook("9780142000656","East of Eden","https://covers.openlibrary.org/b/id/8309140-L.jpg","","","");
+        DBook b3 = new DBook("9780152052607","The Hundred Dresses","https://covers.openlibrary.org/b/id/10703295-L.jpg","","","");
+        DBook b4 = new DBook("9780205609994","Influence","https://covers.openlibrary.org/b/id/8284301-L.jpg","","","");
+        DBook b5 = new DBook("9780803740167","Roller Girl","https://covers.openlibrary.org/b/id/11327078-L.jpg","","","");
+
+        db.dBookDao().insertBook(b1);
+        db.dBookDao().insertBook(b2);
+        db.dBookDao().insertBook(b3);
+        db.dBookDao().insertBook(b4);
+        db.dBookDao().insertBook(b5);
+
+        db.hasDao().insertRelation(new Has("a","9780618680009"));
+        db.hasDao().insertRelation(new Has("a","9780142000656"));
+        db.hasDao().insertRelation(new Has("a","9780152052607"));
+        db.hasDao().insertRelation(new Has("a","9780205609994"));
+        db.hasDao().insertRelation(new Has("a","9780803740167"));
+
+        List<DBook> lst = db.dBookDao().getAllBooksFromUsername("a");
+
+        List<Book> bookList = convertDBookToBook(lst);
+
+        mBooks.addAll(bookList);
+        System.out.println(mBooks.toString());
+
+
+    }
+
+    private List<Book> convertDBookToBook(List<DBook> lst) {
+        List<Book> l = new ArrayList<>();
+        for (DBook dBook : lst) {
+            Book book = new Book();
+            book.setmISBN(dBook.isbn);
+            book.setmTitle(dBook.title);
+            book.setmThumbnail(dBook.thumbnail);
+            book.setmAuthor(dBook.author);
+            book.setmPublisher(dBook.publisher);
+            book.setmYear(dBook.year);
+            l.add(book);
+        }
+        return l;
     }
 
     public void openDialogNewBook() {
@@ -136,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
 
     @Override
     public void addBook(String mISBN) {
-        String uri = "https://openlibrary.org/api/books?bibkeys=ISBN:" + mISBN + "&jscmd=details&format=json";
+        //String uri = "https://openlibrary.org/api/books?bibkeys=ISBN:" + mISBN + "&jscmd=details&format=json";
+        String uri = "https://openlibrary.org/search.json?isbn=" + mISBN;
         new JsonTask().execute(uri);
     }
 
@@ -145,41 +208,39 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         Book mBook = new Book();
         String mThumbnail = mBook.getmThumbnail();
         String mTitle = mBook.getmTitle();
-        //String mAuthor = mBook.getmAuthor();
-        //String mPublisher = mBook.getmPublisher();
-        //String mYear = mBook.getmYear();
+        String mAuthor = mBook.getmAuthor();
+        String mPublisher = mBook.getmPublisher();
+        String mYear = mBook.getmYear();
         String mISBN = mBook.getmISBN();
 
         try {
-
             // Para esquivar la mala lectura de caracteres Unicode en los objetos
             String JSON_STRING1 = forceUnicode(JSON_STRING);
 
-            System.out.println(JSON_STRING1);
-            System.out.println("-+-+-+-+-+-+");
 
             JSONObject obj_root = new JSONObject(JSON_STRING1);
-
-            // En Java no es posible acceder directamente al primer elemento de un array y necesitamos
-            // saber el nombre exacto del elemento (el ISBN), para ello usamos este workaround
-            String isbn_search_temp = JSON_STRING1.split(": ")[0];
-            String isbn_search = isbn_search_temp.substring(2, isbn_search_temp.length() - 1);
+            JSONArray obj_docs_pre = obj_root.getJSONArray("docs");
+            JSONObject obj_docs = obj_docs_pre.getJSONObject(0);
 
 
-            JSONObject obj_main = obj_root.getJSONObject(isbn_search);
-            JSONObject obj_details = obj_main.getJSONObject("details");
-
-
-            try {mThumbnail = obj_main.getString("thumbnail_url")
-                    .replace("-S.jpg","-L.jpg")
-                    .replace("-M.jpg","-L.jpg");
-                    mBook.setmThumbnail(mThumbnail);
+            try {String cover_i = obj_docs.getString("cover_i");
+                mThumbnail = "https://covers.openlibrary.org/b/id/"+cover_i+"-L.jpg";
+                mBook.setmThumbnail(mThumbnail);
             } catch (Exception e) { e.printStackTrace(); }
-            try {mTitle = obj_details.getString("title");
+            try {mTitle = obj_docs.getString("title");
                 mBook.setmTitle(mTitle);
             } catch (Exception e) { e.printStackTrace(); }
-            try {mISBN = obj_details.getJSONArray("isbn13").getString(0);
+            try {mISBN = obj_docs.getJSONArray("isbn").getString(0);
                 mBook.setmISBN(mISBN);
+            } catch (Exception e) { e.printStackTrace(); }
+            try {mAuthor = obj_docs.getJSONArray("author_name").getString(0);
+                mBook.setmAuthor(mAuthor);
+            } catch (Exception e) { e.printStackTrace(); }
+            try {mPublisher = obj_docs.getJSONArray("publisher").getString(0);
+                mBook.setmPublisher(mPublisher);
+            } catch (Exception e) { e.printStackTrace(); }
+            try {mYear = obj_docs.getJSONArray("publish_year").getString(0);
+                mBook.setmYear(mYear);
             } catch (Exception e) { e.printStackTrace(); }
 
         } catch (JSONException e) {
@@ -188,22 +249,21 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
             e.printStackTrace();
         }
 
+        System.out.println(mBook);
+
         if (mISBN.equals("5")){ // mirar si ya existe
             Toast.makeText(getApplicationContext(), R.string.isbn_already, Toast.LENGTH_LONG).show();
         }
-
-
-        System.out.println("TITLE: " + mTitle);
-        System.out.println("ISBN: " + mISBN);
-
 
         if (JSON_STRING.length() < 10) {
             //Toast.makeText(getApplicationContext(), R.string.isbn_not_found, Toast.LENGTH_SHORT).show();
             Toast.makeText(getApplicationContext(), R.string.isbn_not_found, Toast.LENGTH_LONG).show();
         } else {
-            mBooks.add(0, mBook);
-            adapter.notifyItemInserted(0);
-            //adapter.notifyDataSetChanged();
+            int index_insert = mBooks.size();
+            mBooks.add(index_insert, mBook);
+            //mBooks.toString();
+            //adapter.notifyItemInserted(index_insert);
+            adapter.notifyDataSetChanged();
             Toast.makeText(getApplicationContext(), getString(R.string.book_added, mTitle), Toast.LENGTH_LONG).show();
         }
 
@@ -265,19 +325,10 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
     public void onBookClick(int position) {
 
         Book b = mBooks.get(position);
-
-
-
-
         Intent i = new Intent(this, CardActivity.class);
         i.putExtra("book", b);
         startActivity(i);
 
-        /*
-        Intent i = new Intent(view.getContext(), CardActivity.class);
-        i.putExtra("book", MyViewHolder.this.getAdapterPosition());
-        view.getContext().startActivity(i);
-        MyViewHolder.this.getAdapterPosition();*/
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
