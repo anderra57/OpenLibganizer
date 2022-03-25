@@ -36,7 +36,7 @@ public class Utils {
 
     }
 
-    // Fuente:
+    // Fuente: https://stackoverflow.com/a/33085670
     public String get_SHA_512_SecurePassword(String passwordToHash){
         String generatedPassword = null;
         try {
