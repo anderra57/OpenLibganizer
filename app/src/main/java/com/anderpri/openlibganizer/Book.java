@@ -1,9 +1,24 @@
 package com.anderpri.openlibganizer;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class Book implements Parcelable {
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "\n" +
+        "mThumbnail: " + mThumbnail + "\n" +
+        "mTitle: " + mTitle + "\n" +
+        "mAuthor: " + mAuthor + "\n" +
+        "mPublisher: " + mPublisher + "\n" +
+        "mYear: " + mYear + "\n" +
+        "mISBN: " + mISBN + "\n";
+    }
 
     String mThumbnail;
     String mTitle;
@@ -11,22 +26,23 @@ public class Book implements Parcelable {
     String mPublisher;
     String mYear;
     String mISBN;
+    String na = "N/A"; //default_info, no puedo hacerlo
 
     public Book() {
-        this.mThumbnail = "N/A";
-        this.mTitle = "N/A";
-        this.mAuthor = "N/A";
-        this.mPublisher = "N/A";
-        this.mYear = "N/A";
-        this.mISBN = "N/A";
+        this.mThumbnail = na;
+        this.mTitle = na;
+        this.mAuthor = na;
+        this.mPublisher = na;
+        this.mYear = na;
+        this.mISBN = na;
     }
 
     public Book(String s0, String s1, String s2) {
         this.mThumbnail = s2;
         this.mTitle = s1;
-        this.mAuthor = "N/A";
-        this.mPublisher = "N/A";
-        this.mYear = "N/A";
+        this.mAuthor = na;
+        this.mPublisher = na;
+        this.mYear = na;
         this.mISBN = s0;
     }
 
