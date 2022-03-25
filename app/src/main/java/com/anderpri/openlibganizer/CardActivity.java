@@ -1,13 +1,12 @@
 package com.anderpri.openlibganizer;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
@@ -33,7 +32,7 @@ public class CardActivity extends AppCompatActivity {
         ImageView thumb = findViewById(R.id.card_thumb);
         TextView title = findViewById(R.id.card_title);
 
-        if (!book.getmThumbnail().equals("N/A")){
+        if (!book.getmThumbnail().equals(getString(R.string.default_info))){
             // Fuente: https://devexperto.com/glide-android/
             Uri uri = Uri.parse(book.getmThumbnail());
             Glide.with(this).load(uri).into(thumb);
