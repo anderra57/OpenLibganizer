@@ -16,7 +16,8 @@ public class Book implements Parcelable {
         "mAuthor: " + mAuthor + "\n" +
         "mPublisher: " + mPublisher + "\n" +
         "mYear: " + mYear + "\n" +
-        "mISBN: " + mISBN + "\n";
+        "mISBN: " + mISBN + "\n" +
+        "mKey: " + mKey + "\n";
     }
 
     String mThumbnail;
@@ -25,6 +26,7 @@ public class Book implements Parcelable {
     String mPublisher;
     String mYear;
     String mISBN;
+    String mKey;
     String na = "N/A"; //default_info, no puedo hacerlo
 
     public Book() {
@@ -34,6 +36,7 @@ public class Book implements Parcelable {
         this.mPublisher = na;
         this.mYear = na;
         this.mISBN = na;
+        this.mKey = na;
     }
 
     public Book(String s0, String s1, String s2) {
@@ -43,6 +46,7 @@ public class Book implements Parcelable {
         this.mPublisher = na;
         this.mYear = na;
         this.mISBN = s0;
+        this.mKey = na;
     }
 
     public String getmThumbnail() {
@@ -93,6 +97,14 @@ public class Book implements Parcelable {
         this.mISBN = mISBN;
     }
 
+    public String getmKey() {
+        return mKey;
+    }
+
+    public void setmKey(String mKey) {
+        this.mKey = mKey;
+    }
+
     // Fuente: https://www.vogella.com/tutorials/AndroidParcelable/article.html
 
     public Book(Parcel in) {
@@ -102,6 +114,7 @@ public class Book implements Parcelable {
         this.mPublisher = in.readString();
         this.mYear = in.readString();
         this.mISBN = in.readString();
+        this.mKey = in.readString();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -127,5 +140,6 @@ public class Book implements Parcelable {
         dest.writeString(this.mPublisher);
         dest.writeString(this.mYear);
         dest.writeString(this.mISBN);
+        dest.writeString(this.mKey);
     }
 }
