@@ -12,70 +12,53 @@ import android.widget.Toast;
 import com.anderpri.openlibganizer.R;
 import com.anderpri.openlibganizer.db.AppDatabase;
 import com.anderpri.openlibganizer.db.User;
+import com.anderpri.openlibganizer.utils.Preferences;
 import com.anderpri.openlibganizer.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText mUserText;
     EditText mPassText;
-    Button mButton;
+    Button mButtonLogin;
+    Button mButtonCreate;
+    AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.getInstance().setLocale(this,"en");
-        
-        addUser();
+        db = AppDatabase.getInstance(this.getApplicationContext());
+        configureView();
+    }
 
+    private void configureView() {
         setContentView(R.layout.activity_login);
 
         mUserText = findViewById(R.id.login_username);
         mPassText = findViewById(R.id.login_password);
-        mButton = findViewById(R.id.login_button);
+        mButtonLogin = findViewById(R.id.login_button);
+        mButtonCreate = findViewById(R.id.login_create_account);
 
-        mButton.setOnClickListener(view -> checkLogin(view));
-
+        mButtonLogin.setOnClickListener(this::checkLogin);
+        mButtonCreate.setOnClickListener(this::openCreate);
     }
 
-    private void addUser() {
-        AppDatabase db  = AppDatabase.getInstance(this.getApplicationContext());
-
-        String input_user = "a";
-        String input_pass = Utils.getInstance().get_SHA_512_SecurePassword("a");
-        System.out.println(input_pass);
-
-        String lang = "es"; // default language, cambiar
-        boolean theme = false; // default
-
-        if (!db.userDao().userExists(input_user)){
-            User user = new User(input_user,input_pass,lang,theme);
-            db.userDao().insertUser(user);
-        }
+    private void openCreate(View view) {
+        Intent i = new Intent(LoginActivity.this, CreateAccountActivity.class);
+        finish();
+        startActivity(i);
     }
 
     private void checkLogin(View view) {
         String sUser = mUserText.getText().toString();
         String sPass = Utils.getInstance().get_SHA_512_SecurePassword(mPassText.getText().toString());
-
-        System.out.println(sUser + " " + sPass);
-        boolean basicLogin = sUser.equals("") && sPass.equals("");
-        User u = login(sUser,sPass);
-
-        if (basicLogin || (u != null)){ // de prueba
-            // entrar
+        if (db.userDao().getUser(sUser, sPass) != null){ // si el usuario está en la base de datos...
+            // 1) Crear la sesión en SharedPreferences
+            Preferences.getInstance().login(sUser);
+            // 2) Entrar al MainActivity
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            i.putExtra("username",sUser);
             finish();
             startActivity(i);
-        } else {
-            //toast > incorrect login
-            Toast.makeText(view.getContext(),R.string.login_incorrect_creds,Toast.LENGTH_SHORT).show();
-        }
+        } else { Toast.makeText(view.getContext(),R.string.login_incorrect_creds,Toast.LENGTH_SHORT).show(); }
 
-    }
-
-    private User login(String sUser, String sPass) {
-        AppDatabase db  = AppDatabase.getInstance(this.getApplicationContext());
-        return db.userDao().getUser(sUser, sPass);
     }
 }
