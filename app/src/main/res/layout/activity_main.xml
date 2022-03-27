@@ -26,7 +26,6 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="@color/purple_200"
         android:clickable="true"
-        android:contentDescription="@string/submit"
         android:focusable="true"
         android:src="@drawable/ic_baseline_menu_open_24"
         android:tint="@android:color/white"
@@ -34,7 +33,7 @@
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,MissingConstraints,SpeakableTextPresentCheck,ImageContrastCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
