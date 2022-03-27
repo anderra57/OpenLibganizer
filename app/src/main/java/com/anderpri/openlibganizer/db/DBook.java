@@ -22,13 +22,16 @@ public class DBook {
     public String publisher;
     @ColumnInfo
     public String year;
+    @ColumnInfo
+    public String key;
 
-    public DBook(@NonNull String isbn, String title, String thumbnail, String author, String publisher, String year) {
+    public DBook(@NonNull String isbn, String title, String thumbnail, String author, String publisher, String year, String key) {
         this.isbn = isbn;
         this.thumbnail = thumbnail;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.year = year;
+        this.year = key;
     }
 }

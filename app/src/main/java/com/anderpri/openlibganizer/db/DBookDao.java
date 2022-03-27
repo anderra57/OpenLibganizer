@@ -22,6 +22,18 @@ public interface DBookDao {
     @Query("select count(*) from DBook where isbn like :mISBN")
     int checkIfBookAdded(String mISBN);
 
+    @Query("update DBook set title = :mValue where isbn like :mISBN")
+    void updateTitle(String mValue, String mISBN);
+
+    @Query("update DBook set author = :mValue where isbn like :mISBN")
+    void updateAuthor(String mValue, String mISBN);
+
+    @Query("update DBook set publisher = :mValue where isbn like :mISBN")
+    void updatePublisher(String mValue, String mISBN);
+
+    @Query("update DBook set year = :mValue where isbn like :mISBN")
+    void updateYear(String mValue, String mISBN);
+
     @Insert
     void insertBook(DBook dBook);
 
