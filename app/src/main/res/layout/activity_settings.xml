@@ -8,47 +8,46 @@
     tools:context=".views.SettingsActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:onClick="onButtonClicked"
+        android:text="@string/logout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_string" />
+        app:layout_constraintTop_toBottomOf="@+id/radio_group"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:checkedButton="@id/radio_en"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
-            android:id="@+id/radio_en"
+        <TextView
+            android:id="@+id/lang_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
-            android:text="@string/radio_en" />
+            android:text="@string/lang_radio_text" />
 
         <RadioButton
-            android:id="@+id/radio_es"
+            android:id="@+id/lang_radio_en"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onRadioButtonClicked"
-            android:text="@string/radio_es" />
+            android:text="@string/lang_radio_en" />
+
+        <RadioButton
+            android:id="@+id/lang_radio_es"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/lang_radio_es" />
     </RadioGroup>
-
-    <TextView
-        android:id="@+id/test_string"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/test_string_locale"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
