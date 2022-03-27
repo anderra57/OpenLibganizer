@@ -1,34 +1,48 @@
 <resources>
     <!-- Global strings -->
-    <string name="app_name">0OpenLibganizer</string>
+    <string name="app_name" translatable="false">OpenLibganizer</string>
     <string name="wait">Please wait…</string>
+    <string name="default_info" translatable="false">N/A</string>
 
     <!-- Login activity strings -->
     <string name="login_user_text">Username</string>
     <string name="login_pass_text">Password</string>
     <string name="login_btn_text">Log in</string>
+    <string name="login_btn_create_account_text">Create account</string>
     <string name="login_incorrect_creds">Incorrect credentials!</string>
 
     <!-- Main activity strings -->
+    <string name="welcome_user">Welcome, %1$s!</string>
+
     <!-- ISBN search -->
-    <string name="submit">Submit</string>
     <string name="isbn_not_found">ISBN not found!</string>
     <string name="book_added">%1$s added!</string>
     <string name="error_isbn">An error happened while obtaining the data</string>
     <string name="isbn_dialog">Enter ISBN code</string>
     <string name="isbn_already">ISBN already registered!</string>
-    <string name="default_info" translatable="false">N/A</string>
     <string name="add_dialog_title">Add book</string>
     <string name="add_dialog_cancel">Cancel</string>
     <string name="add_dialog_ok" translatable="false">OK</string>
     <string name="test_string_locale">The appropriate representatives of the European feed business sectors have, in consultation with other parties concerned, in collaboration with the competent national authorities and taking into account relevant experience from opinions issued by the European Food Safety Authority and scientific or technological developments, developed amendments to the Catalogue of feed materials according to Commission Regulation (EU) No 68/2013 (2). Those amendments concern clarifications of the general provisions, new entries of treatment processes and feed materials and improvements of existing entries. Furthermore, they set maximum contents of chemical impurities, levels of botanical purity or levels of moisture content and establish compulsory declarations for the feed materials.</string>
 
     <!-- Book activity strings -->
-    <!-- title, author... -->
+        <!-- title, author... -->
+    <string name="card_share">Share book</string>
+    <string name="card_edit">Edit data</string>
+
+        <!-- Notification -->
+    <string name="noti_book_added">New book added:</string>
+    <string name="noti_book_action">Tap to see a full description</string>
 
     <!-- Settings activity strings -->
-    <!-- title, author... -->
-    <string name="radio_en">English</string>
-    <string name="radio_es">Spanish</string>
+    <string name="logout">Log out</string>
+    <string name="lang_text">Language</string>
+    <string name="lang_radio_en">English</string>
+    <string name="lang_radio_es">Spanish</string>
+    <string name="lang_radio_text">Change the language of the app</string>
+    <string name="lang_change">Language changed to English</string>
+    <string name="theme_radio_dark">Dark theme</string>
+    <string name="theme_radio_light">Light theme</string>
+    <string name="theme_text">Theme</string>
 
 </resources>
