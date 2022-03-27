@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OpenLibganizer">
         <activity
+            android:name=".views.CreateAccountActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".views.LoginActivity"
+            android:name=".views.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +30,7 @@
             android:name=".views.CardActivity"
             android:exported="false" />
         <activity
-            android:name=".views.MainActivity"
+            android:name=".views.LoginActivity"
             android:exported="true" />
     </application>
 
