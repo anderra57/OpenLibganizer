@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.anderpri.openlibganizer.R;
-import com.anderpri.openlibganizer.db.AppDatabase;
-import com.anderpri.openlibganizer.db.User;
+import com.anderpri.openlibganizer.controllers.AppDatabase;
+import com.anderpri.openlibganizer.model.User;
 import com.anderpri.openlibganizer.utils.Preferences;
 import com.anderpri.openlibganizer.utils.Utils;
 
@@ -59,10 +59,10 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     private void addUser(View view) {
-        if (!db.userDao().userExists(mUser)){
+        if (!db.userExists(mUser)){
             Utils ut = Utils.getInstance();
             User user = new User(mUser, ut.get_SHA_512_SecurePassword(mPass),ut.getLocale(getApplicationContext()),false);
-            db.userDao().insertUser(user);
+            db.insertUser(user);
         }  else { Toast.makeText(view.getContext(),R.string.login_incorrect_creds,Toast.LENGTH_SHORT).show(); }
     }
 }

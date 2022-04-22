@@ -27,9 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anderpri.openlibganizer.R;
 import com.anderpri.openlibganizer.controllers.MyAdapter;
-import com.anderpri.openlibganizer.db.AppDatabase;
-import com.anderpri.openlibganizer.db.DBook;
-import com.anderpri.openlibganizer.db.Has;
+import com.anderpri.openlibganizer.controllers.AppDatabase;
+import com.anderpri.openlibganizer.model.DBook;
+import com.anderpri.openlibganizer.model.Has;
 import com.anderpri.openlibganizer.model.Book;
 import com.anderpri.openlibganizer.model.Books;
 import com.anderpri.openlibganizer.utils.Preferences;
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
         //importTestData();
 
         System.out.println(mUser);
-        List<DBook> dBookList = db.dBookDao().getAllBooksFromUsername(mUser);
+        List<DBook> dBookList = db.getAllBooksFromUsername(mUser);
         System.out.println(dBookList.toString());
         System.out.println(dBookList.size());
         List<Book> bookList = convertDBookToBook(dBookList);
@@ -203,36 +203,36 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
 
     private void gab() {
         System.out.println("has");
-        List<Has> lh = db.hasDao().getAllUsersBooks();
+        List<Has> lh = db.getAllUsersBooks();
         lh.stream().map(h -> h.isbn + " " + h.username).forEach(System.out::println);
 
         System.out.println("books");
-        List<DBook> lb = db.dBookDao().getAllBooks();
+        List<DBook> lb = db.getAllBooks();
         lb.stream().map(b -> b.isbn).forEach(System.out::println);
     }
 
     private void importTestData() {
 
-        if ((db.dBookDao().checkIfBookAdded("9780618680009") == 0)) {
+        if ((db.checkIfBookAdded("9780618680009") == 0)) {
             DBook b1 = new DBook("9780618680009", "The God Delusion", "https://covers.openlibrary.org/b/id/8231555-L.jpg", "", "", "","");
             DBook b2 = new DBook("9780142000656", "East of Eden", "https://covers.openlibrary.org/b/id/8309140-L.jpg", "", "", "","");
             DBook b3 = new DBook("9780152052607", "The Hundred Dresses", "https://covers.openlibrary.org/b/id/10703295-L.jpg", "", "", "","");
             DBook b4 = new DBook("9780205609994", "Influence", "https://covers.openlibrary.org/b/id/8284301-L.jpg", "", "", "","");
             DBook b5 = new DBook("9780803740167", "Roller Girl", "https://covers.openlibrary.org/b/id/11327078-L.jpg", "", "", "","");
 
-            db.dBookDao().insertBook(b1);
-            db.dBookDao().insertBook(b2);
-            db.dBookDao().insertBook(b3);
-            db.dBookDao().insertBook(b4);
-            db.dBookDao().insertBook(b5);
+            db.insertBook(b1);
+            db.insertBook(b2);
+            db.insertBook(b3);
+            db.insertBook(b4);
+            db.insertBook(b5);
 
-            db.hasDao().insertRelation(new Has("a", "9780618680009"));
-            db.hasDao().insertRelation(new Has("a", "9780142000656"));
-            db.hasDao().insertRelation(new Has("a", "9780152052607"));
-            db.hasDao().insertRelation(new Has("b", "9780205609994"));
-            db.hasDao().insertRelation(new Has("b", "9780803740167"));
+            db.insertRelation(new Has("a", "9780618680009"));
+            db.insertRelation(new Has("a", "9780142000656"));
+            db.insertRelation(new Has("a", "9780152052607"));
+            db.insertRelation(new Has("b", "9780205609994"));
+            db.insertRelation(new Has("b", "9780803740167"));
 
-            //List<DBook> dBookList = db.dBookDao().getAllBooksFromUsername("a");
+            //List<DBook> dBookList = db.getAllBooksFromUsername("a");
             //List<Book> bookList = convertDBookToBook(dBookList);
 
             //mBooks.addAll(bookList);
@@ -477,17 +477,17 @@ public class MainActivity extends AppCompatActivity implements DialogNewBook.Dia
 
             // 1) Se mira si el libro está REGISTRADO en la base de datos
             // Si no está registrado, se añade a la base de datos
-            if (db.dBookDao().checkIfBookAdded(mISBN) == 0) {
+            if (db.checkIfBookAdded(mISBN) == 0) {
                 DBook newBook = new DBook(mISBN, mTitle, mThumbnail, mAuthor, mPublisher, mYear, mKey);
-                db.dBookDao().insertBook(newBook);
+                db.insertBook(newBook);
             }
 
             // 2) Se mira si el libro está RELACIONADO a nuestro usuario en la base de datos
-            if (db.hasDao().checkIfBookRelated(mISBN, mUser) != 0) {
+            if (db.checkIfBookRelated(mISBN, mUser) != 0) {
                 Toast.makeText(getApplicationContext(), R.string.isbn_already, Toast.LENGTH_LONG).show();
             } else {
                 // Primero se relaciona el libro
-                db.hasDao().insertRelation(new Has(mUser, mISBN));
+                db.insertRelation(new Has(mUser, mISBN));
 
                 // Y por último se añade a la vista
                 int index_insert = mBooks.size();

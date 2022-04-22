@@ -12,12 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 
 import com.anderpri.openlibganizer.R;
-import com.anderpri.openlibganizer.db.AppDatabase;
+import com.anderpri.openlibganizer.controllers.AppDatabase;
 import com.anderpri.openlibganizer.model.Book;
 import com.bumptech.glide.Glide;
 
@@ -122,19 +120,19 @@ public class CardActivity extends AppCompatActivity {
             AppDatabase db = AppDatabase.getInstance(this.getApplicationContext());
 
             if (!title.getText().toString().equals(title_edit.getText().toString())){
-                db.dBookDao().updateTitle(title_edit.getText().toString(),mISBN);
+                db.updateTitle(title_edit.getText().toString(),mISBN);
                 title.setText(title_edit.getText().toString());
             }
             if (!author.getText().toString().equals(author_edit.getText().toString())){
-                db.dBookDao().updateAuthor(author_edit.getText().toString(),mISBN);
+                db.updateAuthor(author_edit.getText().toString(),mISBN);
                 author.setText(author_edit.getText().toString());
             }
             if (!publisher.getText().toString().equals(publisher_edit.getText().toString())){
-                db.dBookDao().updatePublisher(publisher_edit.getText().toString(),mISBN);
+                db.updatePublisher(publisher_edit.getText().toString(),mISBN);
                 publisher.setText(publisher_edit.getText().toString());
             }
             if (!year.getText().toString().equals(year_edit.getText().toString())){
-                db.dBookDao().updateYear(year_edit.getText().toString(),mISBN);
+                db.updateYear(year_edit.getText().toString(),mISBN);
                 year.setText(year_edit.getText().toString());
             }
         }

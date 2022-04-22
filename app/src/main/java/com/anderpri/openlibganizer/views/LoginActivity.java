@@ -10,8 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.anderpri.openlibganizer.R;
-import com.anderpri.openlibganizer.db.AppDatabase;
-import com.anderpri.openlibganizer.db.User;
+import com.anderpri.openlibganizer.controllers.AppDatabase;
 import com.anderpri.openlibganizer.utils.Preferences;
 import com.anderpri.openlibganizer.utils.Utils;
 
@@ -51,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private void checkLogin(View view) {
         String sUser = mUserText.getText().toString();
         String sPass = Utils.getInstance().get_SHA_512_SecurePassword(mPassText.getText().toString());
-        if (db.userDao().getUser(sUser, sPass) != null){ // si el usuario está en la base de datos...
+        if (db.getUser(sUser, sPass) != null){ // si el usuario está en la base de datos...
             // 1) Crear la sesión en SharedPreferences
             Preferences.getInstance().login(sUser);
             // 2) Entrar al MainActivity
